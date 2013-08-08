@@ -1,0 +1,6 @@
+[submodule "moztt"]
+	path = moztt
+	url = git://github.com/mozilla-b2g/moztt.git
+[submodule "base"]
+	path = base
+	url = https://github.com/android/platform_frameworks_base.git
