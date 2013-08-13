@@ -8,7 +8,10 @@ import sys
 class CollectFontNames:
     pref = re.compile('pref\("font\.(name(?:-list)?)\.([^\.]+)\.(.*?)", "(.*?)"')
     def __init__(self):
-        self.fontnames = defaultdict(dict)
+        class listdict(defaultdict):
+            def __init__(self):
+                defaultdict.__init__(self, list)
+        self.fontnames = defaultdict(listdict)
 
     def write(self, content):
         if not content.startswith('pref("font.name'):
@@ -16,10 +19,9 @@ class CollectFontNames:
         
         name_or_list, family, langgroup, fonts = self.pref.match(content).groups()
         if name_or_list == 'name':
-            fonts = [fonts]
+            self.fontnames[langgroup][family].insert(0, fonts)
         else:
-            fonts = fonts.split(', ')
-        self.fontnames[langgroup][family] = fonts
+            self.fontnames[langgroup][family] += fonts.split(', ')
 
     def getFonts(self, langgroup):
         langgroup = langgroup.lower()
