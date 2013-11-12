@@ -35,8 +35,12 @@ class CollectFontNames:
 
 moz_base = sys.argv[1]
 
-sys.path.append(os.path.join(moz_base, 'config'))
-from Preprocessor import preprocess
+try:
+    sys.path.append(os.path.join(moz_base, 'config'))
+    from Preprocessor import preprocess
+except ImportError:
+    sys.path[-1] = os.path.join(moz_base, 'python', 'mozbuild')
+    from mozbuild.preprocessor import preprocess
 
 cf = CollectFontNames()
 preprocess(includes=[open(os.path.join(moz_base, 'modules/libpref/src/init/all.js'))],
